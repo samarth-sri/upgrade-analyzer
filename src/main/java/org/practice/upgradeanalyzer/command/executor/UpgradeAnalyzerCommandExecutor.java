@@ -6,8 +6,12 @@ import org.practice.upgradeanalyzer.csv.input.MigrationChecklistItem;
 import org.practice.upgradeanalyzer.scanner.DirectoryScanner;
 import org.practice.upgradeanalyzer.util.FileUtils;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class UpgradeAnalyzerCommandExecutor extends CommandExecutor<UpgradeAnalyzerCommand> {
     private static final UpgradeAnalyzerCommandExecutor INSTANCE = new UpgradeAnalyzerCommandExecutor();
@@ -27,9 +31,12 @@ public class UpgradeAnalyzerCommandExecutor extends CommandExecutor<UpgradeAnaly
                         DirectoryScanner directoryScanner = DirectoryScanner.getInstance();
                         list.forEach(listItem -> {
                             try {
+                                Consumer<Path> fileProcessor = p -> processFile(p, new String[]
+                                        {listItem.getCipParent(), listItem.getCipChild()});
+                                Predicate<Path> filterPredicate =
+                                        p -> Files.isRegularFile(p) && p.toString().endsWith("." + listItem.getTargetFileType());
                                 directoryScanner.scanDirectoryRecursively(
-                                        listItem.getTargetFileType(), directoryToScan, new String[]
-                                                {listItem.getCipParent(), listItem.getCipChild()});
+                                        directoryToScan, filterPredicate, fileProcessor);
                             } catch (Exception e) {
                                 System.out.println("---- Caught below exception for change item: " + listItem.getChangeItem());
                                 System.out.println();
@@ -48,33 +55,37 @@ public class UpgradeAnalyzerCommandExecutor extends CommandExecutor<UpgradeAnaly
 
     @Override
     protected boolean validate(UpgradeAnalyzerCommand command) {
-        String csvFilePath = System.getProperty(command.getSystemPropertyKey(0));
-        String directoryToScan = System.getProperty(command.getSystemPropertyKey(1));
-        if (csvFilePath == null || csvFilePath.isEmpty()) {
-            System.out.println("Error: 'csvFilePath' system property is missing or empty.");
-            printUsage(command.getUsage());
+        String csvFilePath = command.getSystemPropertyValue(command.getSystemPropertyKey(0));
+        String directoryToScan = command.getSystemPropertyValue(command.getSystemPropertyKey(1));
+        if (!validateSystemProperty(command, command.getSystemPropertyKey(0)))
             return false;
-        }
-        if (directoryToScan == null || directoryToScan.isEmpty()) {
-            System.out.println("Error: 'dirToScan' system property is missing or empty.");
-            printUsage(command.getUsage());
+        if (!validateSystemProperty(command, command.getSystemPropertyKey(1)))
             return false;
-        }
-        // Validate the CSV file path
-        if (!FileUtils.isValidFilePath(csvFilePath)) {
-            System.out.println("Error: The provided 'csvPath' is not a valid file path: " + csvFilePath);
-            printUsage(command.getUsage());
+        if (!validateSystemPropertyForFile(command, command.getSystemPropertyKey(0), csvFilePath))
             return false;
-        }
-        // Validate the directory path
-        if (!FileUtils.isValidDirectoryPath(directoryToScan)) {
-            System.out.println("Error: The provided 'dirToScan' is not a valid directory path: " + directoryToScan);
-            printUsage(command.getUsage());
+        if (!validateSystemPropertyForDir(command, command.getSystemPropertyKey(1), directoryToScan))
             return false;
-        }
         System.out.println("CSV File Path: " + csvFilePath);
         System.out.println("Directory to Scan: " + directoryToScan);
         return true;
     }
 
+    private void processFile(Path file, String[] patterns) {
+        /*Pattern CIPParent = Pattern.compile(patterns[0]);
+        Pattern CIPChild = StringUtils.isEmpty(patterns[1]) ? null: Pattern.compile(patterns[1]);*/
+        /*try {
+            // Use pattern matching to count occurrences
+            long occurrenceCount = Files.lines(file)
+                    .flatMap(line -> pattern.matcher(line).results().stream())
+                    .count();
+
+            if (occurrenceCount > 0) {
+                patternOccurrences.put(file.toString(), (int) occurrenceCount);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + file);
+            e.printStackTrace();
+        }*/
+    }
 }

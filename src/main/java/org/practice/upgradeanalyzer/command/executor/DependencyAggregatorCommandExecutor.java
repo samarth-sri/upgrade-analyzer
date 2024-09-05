@@ -6,6 +6,7 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import org.practice.upgradeanalyzer.command.DependencyAggregatorCommand;
 import org.practice.upgradeanalyzer.csv.config.CustomColumnPositionStrategy;
 import org.practice.upgradeanalyzer.csv.output.Dependency;
+import org.practice.upgradeanalyzer.scanner.DirectoryScanner;
 import org.practice.upgradeanalyzer.util.FileUtils;
 
 import java.io.*;
@@ -14,6 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class DependencyAggregatorCommandExecutor extends CommandExecutor<DependencyAggregatorCommand> {
     private static final DependencyAggregatorCommandExecutor INSTANCE = new DependencyAggregatorCommandExecutor();
@@ -29,22 +32,12 @@ public class DependencyAggregatorCommandExecutor extends CommandExecutor<Depende
     protected boolean validate(DependencyAggregatorCommand command) {
         String dependencyFileName = command.getSystemPropertyValue(command.getSystemPropertyKey(0));
         String directoryToScan = command.getSystemPropertyValue(command.getSystemPropertyKey(1));
-        if (dependencyFileName == null || dependencyFileName.isEmpty()) {
-            System.out.println("Error: 'depFileName' system property is missing or empty.");
-            printUsage(command.getUsage());
+        if (!validateSystemProperty(command, command.getSystemPropertyKey(0)))
             return false;
-        }
-        if (directoryToScan == null || directoryToScan.isEmpty()) {
-            System.out.println("Error: 'dirToScan' system property is missing or empty.");
-            printUsage(command.getUsage());
+        if (!validateSystemProperty(command, command.getSystemPropertyKey(1)))
             return false;
-        }
-        // Validate the directory path
-        if (!FileUtils.isValidDirectoryPath(directoryToScan)) {
-            System.out.println("Error: The provided 'dirToScan' is not a valid directory path: " + directoryToScan);
-            printUsage(command.getUsage());
+        if (!validateSystemPropertyForDir(command, command.getSystemPropertyKey(1), directoryToScan))
             return false;
-        }
         System.out.println("Dep File Path: " + dependencyFileName);
         System.out.println("Directory to Scan: " + directoryToScan);
         return true;
@@ -58,9 +51,12 @@ public class DependencyAggregatorCommandExecutor extends CommandExecutor<Depende
         String directoryToScan = command.getSystemPropertyValue(command.getSystemPropertyKey(1));
         try {
             // Traverse the directory tree and find all files named "dependencies.txt"
-            Files.walk(Paths.get(directoryToScan))
-                    .filter(path -> Files.isRegularFile(path) && path.getFileName().toString().equals(dependencyFileName))
-                    .forEach(path -> readDependenciesFromFile(path, dependencies));
+            DirectoryScanner directoryScanner = DirectoryScanner.getInstance();
+            Consumer<Path> fileProcessor = path -> readDependenciesFromFile(path, dependencies);
+            Predicate<Path> filterPredicate =
+                    path -> Files.isRegularFile(path) && path.getFileName().toString().equals(dependencyFileName);
+            directoryScanner.scanDirectoryRecursively(
+                    directoryToScan, filterPredicate, fileProcessor);
             Writer writer = new FileWriter("dependencies.csv");
             MappingStrategy<Dependency> strategy = new CustomColumnPositionStrategy();
             strategy.setType(Dependency.class);

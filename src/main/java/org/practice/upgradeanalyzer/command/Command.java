@@ -24,5 +24,5 @@ public abstract class Command {
 
     public abstract CommandExecutor getExecutor();
 
-    protected abstract String getUsage();
+    public abstract String getUsage();
 }
