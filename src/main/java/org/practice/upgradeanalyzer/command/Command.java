@@ -4,6 +4,8 @@ import org.practice.upgradeanalyzer.command.executor.CommandExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Command {
     private List<String> systemProperties = new ArrayList<>();

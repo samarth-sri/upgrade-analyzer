@@ -32,6 +32,9 @@ public class MigrationChecklistItem {
     @CsvBindByName(column = "ChangeIdentificationPattern-Child")
     private String cipChild;
 
+    @CsvBindByName(column = "ChangeIdentificationPattern-ChildSibling")
+    private String cipChildSibling;
+
     @CsvIgnore
     @CsvBindByName(column = "OpenRewriteRecipe")
     private String openRewriteRecipe;
@@ -64,6 +67,8 @@ public class MigrationChecklistItem {
         return cipChild;
     }
 
+    public String getCipChildSibling() { return cipChildSibling; }
+
     public String getTargetFileType() {
         return targetFileType;
     }
@@ -95,6 +100,7 @@ public class MigrationChecklistItem {
                 ", isMandatory='" + isMandatory + '\'' +
                 ", cipParent='" + cipParent + '\'' +
                 ", cipChild='" + cipChild + '\'' +
+                ", cipChildSibling='" + cipChildSibling + '\'' +
                 ", openRewriteRecipe='" + openRewriteRecipe + '\'' +
                 '}';
     }
