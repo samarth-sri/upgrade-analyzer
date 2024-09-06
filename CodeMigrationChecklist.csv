@@ -1,0 +1,2 @@
+ChangeItem,ChangeType,TargetVersion,SuggestedFix,TargetFileType,IsMandatory,ChangeIdentificationPattern-Parent,ChangeIdentificationPattern-Child,ChangeIdentificationPattern-ChildSibling,OpenRewriteRecipe
+java.util.List,API,JDK17,,java,yes,import\\s+java\\.util\\.List\\s*;,(?s)List<String>.*?new\\s+ArrayList<>\\(\\),(?s)(\\.add\\s*\\(.*?\\).*?\\.get\\s*\\(.*?\\)),
