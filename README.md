@@ -4,7 +4,7 @@
 ### Build using
 `mvn clean package`
 ### Run using
-`java -jar ./target/upgrade-analyzer-1.0-SNAPSHOT-jar-with-dependencies.jar -Dcommand=UpgradeAnalyzer -DcsvPath=<csv_file_path> -DdirToScan=<root_dir> UpgradeAnalyzerMain`
+`java -jar ./target/upgrade-analyzer-1.0-SNAPSHOT-jar-with-dependencies.jar -Dcommand=CodeScanner -DcsvPath=<csv_file_path> -DdirToScan=<root_dir> UpgradeAnalyzerMain`
 
 ***
 

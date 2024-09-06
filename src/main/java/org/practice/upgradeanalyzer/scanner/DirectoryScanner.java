@@ -1,7 +1,5 @@
 package org.practice.upgradeanalyzer.scanner;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -9,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class DirectoryScanner {

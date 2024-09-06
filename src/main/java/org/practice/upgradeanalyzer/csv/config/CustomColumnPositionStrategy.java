@@ -5,12 +5,11 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.apache.commons.lang3.StringUtils;
-import org.practice.upgradeanalyzer.csv.output.Dependency;
 
-public class CustomColumnPositionStrategy extends ColumnPositionMappingStrategy<Dependency> {
+public class CustomColumnPositionStrategy<T> extends ColumnPositionMappingStrategy<T> {
 
     @Override
-    public String[] generateHeader(Dependency bean) throws CsvRequiredFieldEmptyException {
+    public String[] generateHeader(T bean) throws CsvRequiredFieldEmptyException {
         final int numColumns = getFieldMap().values().size();
         super.generateHeader(bean);
 

@@ -67,44 +67,9 @@ public class MigrationChecklistItem {
     public String getTargetFileType() {
         return targetFileType;
     }
+
     public String getOpenRewriteRecipe() {
         return openRewriteRecipe;
-    }
-
-    public void setChangeItem(String changeItem) {
-        this.changeItem = changeItem;
-    }
-
-    public void setChangeType(String changeType) {
-        this.changeType = changeType;
-    }
-
-    public void setTargetVersion(String targetVersion) {
-        this.targetVersion = targetVersion;
-    }
-
-    public void setSuggestedFix(String suggestedFix) {
-        this.suggestedFix = suggestedFix;
-    }
-
-    public void setTargetFileType(String targetFileType) {
-        this.targetFileType = targetFileType;
-    }
-
-    public void setIsMandatory(String isMandatory) {
-        this.isMandatory = isMandatory;
-    }
-
-    public void setCipParent(String cipParent) {
-        this.cipParent = cipParent;
-    }
-
-    public void setCipChild(String cipChild) {
-        this.cipChild = cipChild;
-    }
-
-    public void setOpenRewriteRecipe(String openRewriteRecipe) {
-        this.openRewriteRecipe = openRewriteRecipe;
     }
 
     @Override

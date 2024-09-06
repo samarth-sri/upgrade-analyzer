@@ -57,11 +57,8 @@ public class DependencyAggregatorCommandExecutor extends CommandExecutor<Depende
                     path -> Files.isRegularFile(path) && path.getFileName().toString().equals(dependencyFileName);
             directoryScanner.scanDirectoryRecursively(
                     directoryToScan, filterPredicate, fileProcessor);
-            Writer writer = new FileWriter("dependencies.csv");
-            MappingStrategy<Dependency> strategy = new CustomColumnPositionStrategy();
-            strategy.setType(Dependency.class);
-            StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer).withMappingStrategy(strategy).build();
-            beanToCsv.write(dependencies.stream().toList());
+            Writer writer = new FileWriter("Dependencies.csv");
+            getBeanToCsvInstance(writer, Dependency.class).write(dependencies.stream().toList());
             writer.close();
         } catch (IOException e) {
             System.out.println("Application has caught an IOException and is going to terminate.");

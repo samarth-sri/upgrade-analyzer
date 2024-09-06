@@ -1,67 +1,44 @@
 package org.practice.upgradeanalyzer.csv.output;
 
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MigrationTargetInventoryItem {
 
+    @CsvBindByName(column = "ChangeItem")
+    @CsvBindByPosition(position = 0)
     private String changeItem;
 
-    private List<String> targetFilesWithOccurrenceCounts = new ArrayList<>();
+    @CsvBindByName(column = "TargetFilesWithOccurrenceCounts")
+    @CsvBindByPosition(position = 1)
+    private String targetFilesWithOccurrenceCountsStr;
+
+    @CsvIgnore
+    private List<String> targetFilesWithOccurrenceCounts;
 
     public String getChangeItem() {
         return changeItem;
     }
 
-
-    public List<String> getTargetFilesWithOccurrenceCounts() {
-        return targetFilesWithOccurrenceCounts;
+    public MigrationTargetInventoryItem(String changeItem) {
+        this.changeItem = changeItem;
+        this.targetFilesWithOccurrenceCounts = new ArrayList<>();
     }
 
-    public void setTargetFilesWithOccurrenceCounts(List<String> targetFilesWithOccurrenceCounts) {
-        this.targetFilesWithOccurrenceCounts = targetFilesWithOccurrenceCounts;
+    public void addTargetFileWithOccurrence(String relativePathOfFile, long occurrenceCountInFile) {
+        this.targetFilesWithOccurrenceCounts.add(relativePathOfFile + " (" + occurrenceCountInFile + ")");
+        this.targetFilesWithOccurrenceCountsStr = String.join(" | ", targetFilesWithOccurrenceCounts);
     }
 
     @Override
     public String toString() {
         return "MigrationTargetInventoryItem{" +
                 "changeItem='" + changeItem + '\'' +
-                ", targetFilesWithOccurrenceCounts=" + targetFilesWithOccurrenceCounts +
+                ", targetFilesWithOccurrenceCountsStr=" + targetFilesWithOccurrenceCountsStr +
                 '}';
-    }
-
-    private String convertFileOccurrencesToString(List<TargetFileWithOccurrence> fileWithOccurrences) {
-        if (fileWithOccurrences == null || fileWithOccurrences.isEmpty()) {
-            return "";
-        }
-
-        return fileWithOccurrences.stream()
-                .map(TargetFileWithOccurrence::toString)
-                .collect(Collectors.joining("| "));
-    }
-
-    public static class TargetFileWithOccurrence {
-        private String relativePathOfFile;
-
-        private int occurrenceCountInFile;
-
-        public TargetFileWithOccurrence(String relativePathOfFile, int occurrenceCountInFile) {
-            this.relativePathOfFile = relativePathOfFile;
-            this.occurrenceCountInFile = occurrenceCountInFile;
-        }
-
-        public String getRelativePathOfFile() {
-            return relativePathOfFile;
-        }
-
-        public int getOccurrenceCountInFile() {
-            return occurrenceCountInFile;
-        }
-
-        @Override
-        public String toString() {
-            return "[" + relativePathOfFile + " (" + occurrenceCountInFile + ")]";
-        }
     }
 }

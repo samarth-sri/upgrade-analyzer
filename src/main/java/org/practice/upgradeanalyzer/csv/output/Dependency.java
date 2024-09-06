@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Dependency {
-
     @CsvBindByName(column = "GroupId")
     @CsvBindByPosition(position = 0)
     private String groupId;
@@ -39,33 +38,9 @@ public class Dependency {
         moduleList = new ArrayList<>();
     }
 
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public String getArtifactId() {
-        return artifactId;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public String getModules() {
-        return modules;
-    }
-
     public void addModule(String moduleName) {
-        boolean retVal = moduleList.add(moduleName);
-        this.modules = String.join(", ", moduleList);
-    }
-
-    public boolean contains(String moduleName) {
-        return moduleList.contains(moduleName);
+        moduleList.add(moduleName);
+        this.modules = String.join(" | ", moduleList);
     }
 
     @Override
@@ -91,9 +66,4 @@ public class Dependency {
                 '}';
     }
 
-    /*public static String[] getColumnOrder() {
-        return COLUMN_ORDER;
-    }
-
-    private static final String[] COLUMN_ORDER = new String[] {"GroupId", "ArtifactId", "Version", "Scope", "Modules"};*/
 }

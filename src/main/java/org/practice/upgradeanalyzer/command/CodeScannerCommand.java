@@ -1,9 +1,9 @@
 package org.practice.upgradeanalyzer.command;
 
 import org.practice.upgradeanalyzer.command.executor.CommandExecutor;
-import org.practice.upgradeanalyzer.command.executor.UpgradeAnalyzerCommandExecutor;
+import org.practice.upgradeanalyzer.command.executor.CodeScannerCommandExecutor;
 
-public class UpgradeAnalyzerCommand extends Command {
+public class CodeScannerCommand extends Command {
     @Override
     protected void initializeSystemProperties() {
         addSystemProperty("csvPath");
@@ -13,11 +13,11 @@ public class UpgradeAnalyzerCommand extends Command {
     @Override
     public CommandExecutor getExecutor() {
         initializeSystemProperties();
-        return UpgradeAnalyzerCommandExecutor.getInstance();
+        return CodeScannerCommandExecutor.getInstance();
     }
 
     @Override
     public String getUsage() {
-        return "java -jar .\\target\\upgrade-analyzer-1.0-SNAPSHOT-jar-with-dependencies.jar -Dcommand=UpgradeAnalyzer -DcsvPath=<csv_file_path> -DdirToScan=<root_dir> UpgradeAnalyzerMain";
+        return "java -jar .\\target\\upgrade-analyzer-1.0-SNAPSHOT-jar-with-dependencies.jar -Dcommand=CodeScanner -DcsvPath=<csv_file_path> -DdirToScan=<root_dir> UpgradeAnalyzerMain";
     }
 }

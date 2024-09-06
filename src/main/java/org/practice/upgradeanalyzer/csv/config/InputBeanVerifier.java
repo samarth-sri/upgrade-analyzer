@@ -18,9 +18,7 @@ public class InputBeanVerifier implements BeanVerifier<MigrationChecklistItem> {
     // Verify/filter only mandatory java file csv objects
     @Override
     public boolean verifyBean(MigrationChecklistItem item) throws CsvConstraintViolationException {
-        return (item.getChangeType().equalsIgnoreCase("API Update")
-                || item.getChangeType().equalsIgnoreCase("API Removal")
-                || item.getChangeType().equalsIgnoreCase("Security Update"))
+        return item.getChangeType().contains("API")
                 && item.getIsMandatory().equalsIgnoreCase("yes")
                 && item.getTargetFileType().equalsIgnoreCase("java")
                 && !item.getCipParent().isBlank();

@@ -45,4 +45,8 @@ public class FileUtils {
         Path path = Paths.get(directoryPath);
         return Files.exists(path) && Files.isDirectory(path);
     }
+
+    public static String getRelativePath(String basePath, Path childPath) {
+        return Paths.get(basePath).relativize(childPath).toString();
+    }
 }
