@@ -1,5 +1,6 @@
 package org.practice.upgradeanalyzer.command;
 
+import java.util.List;
 import org.practice.upgradeanalyzer.command.executor.CommandExecutor;
 import org.practice.upgradeanalyzer.command.executor.CodeScannerCommandExecutor;
 

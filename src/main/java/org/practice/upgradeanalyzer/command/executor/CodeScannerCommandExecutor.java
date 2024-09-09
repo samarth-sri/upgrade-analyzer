@@ -81,6 +81,7 @@ public class CodeScannerCommandExecutor extends CommandExecutor<CodeScannerComma
         long cipParentCount = 0;
         long cipChildCount = 0;
         long cipChildSiblingCount = 0;
+        String cipCountGroup = "";
         try {
             // Read the entire file content as a stream of lines
             String content = Files.readString(filePath);
@@ -104,18 +105,21 @@ public class CodeScannerCommandExecutor extends CommandExecutor<CodeScannerComma
 
             if (cipParentCount > 0) {
                 // only 1 pattern needs to be searched and recorded
+                cipCountGroup += cipParentCount;
                 if (cipChild == null) {
                     // child pattern is null proceed with parent only
-                    inventoryItem.addTargetFileWithOccurrence(FileUtils.getRelativePath(dirToScan, filePath), cipParentCount);
+                    inventoryItem.addTargetFileWithOccurrence(FileUtils.getRelativePath(dirToScan, filePath), cipCountGroup);
                 } else {
                     if (cipChildCount > 0) {
                         // if child sibling is not present, both parent and child must have non-zero counts
+                        cipCountGroup += ", " + cipChildCount;
                         if (cipChildSibling == null) {
-                            inventoryItem.addTargetFileWithOccurrence(FileUtils.getRelativePath(dirToScan, filePath), cipChildCount);
+                            inventoryItem.addTargetFileWithOccurrence(FileUtils.getRelativePath(dirToScan, filePath), cipCountGroup);
                         } else {
                             if (cipChildSiblingCount > 0) {
                                 // all three present
-                                inventoryItem.addTargetFileWithOccurrence(FileUtils.getRelativePath(dirToScan, filePath), cipChildSiblingCount);
+                                cipCountGroup += ", " + cipChildSiblingCount;
+                                inventoryItem.addTargetFileWithOccurrence(FileUtils.getRelativePath(dirToScan, filePath), cipCountGroup);
                             } else {
                                 // child sibling pattern yields 0 results
                                 System.out.println("Skipping for ChangeItem: " + inventoryItem.getChangeItem() + " for " + filePath + " as CIP Child Sibling count is 0");

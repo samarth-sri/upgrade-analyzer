@@ -29,7 +29,7 @@ public class MigrationTargetInventoryItem {
         this.targetFilesWithOccurrenceCounts = new ArrayList<>();
     }
 
-    public void addTargetFileWithOccurrence(String relativePathOfFile, long occurrenceCountInFile) {
+    public void addTargetFileWithOccurrence(String relativePathOfFile, String occurrenceCountInFile) {
         this.targetFilesWithOccurrenceCounts.add(relativePathOfFile + " (" + occurrenceCountInFile + ")");
         this.targetFilesWithOccurrenceCountsStr = String.join(" | ", targetFilesWithOccurrenceCounts);
     }
